@@ -1,0 +1,333 @@
+DevOps LifeCycle
+Build Tool: Maven
+Sonarqube tool in continues integration
+PostgreSQL Database for SonarQube
+Integrate Nexus with maven
+CICD Process - Manual Approach using Maven,SonarQube,Docker,AWS ECR
+CICD Process using Jenkins
+Continues deployment using Ansible Playbook
+
+What is DevOps and benefits?
+DevOps Lifecycle:
+  Continues Development
+  Continues Integration
+  Continues Testing
+  Continues Continues Feedback
+  Continues Deployment
+  Continues Monitoring
+Build Tool: Maven
+  Overview of Maven Tool
+  Maven Lifecycle: Default,clean and Site
+  Repositories used in Maven
+  Lab: Build the Springboot package in AWS environment
+  Lab: Location of artifacts & built package dependencies
+  Lab: Exploring pom.xml file
+  Lab: Execute and access the package application
+  Lab: Exploring dependencies of a built package
+  Lab: Build Lifecycle
+  Lab: Build a web application project using maven
+Sonarqube tool in CI:
+  About sonarqube tool and its features
+  Installation of Sonarqube
+Check Sonarqube logs and configuration
+Sonarqube service and port
+Access sonarqube via URL
+Confihure Maven (CI Server)
+Checkout and build the project using maven
+Integrate maven with sonarqube to check the code quality
+Add Sonar-maven-plugin
+Lab: Bad code detected by SonarQube
+Lab: Rectified the code and re-check by SonarQube
+PostgreSQL Database for Sonarqube:
+  About PostgreSQL Database
+  Setup PostgreSQL Database with Sonarqube
+  Create Database,User and Grant previliges
+  Sonarqube configuration file sonar properties
+  Trobleshooting PostgreSQL Database for Sonarqube
+Integrate Nexus with Maven:
+  Install and configure Nexus Server
+  Configure SonaType Nexus Repository Manager
+  Configure CI Server to checkout the project and build the package
+  Configure springboot maven nexus deploy
+  Nexus Requirements in the pom.xml
+  Define Nexus login Credentials
+  Deploy the artifacts to Nexus Repository
+CICD Process - Manual approach using Maven,Sonarqube,Docker,AWS ECR
+  Overview of CICD process
+  Configure BuildServer and Install various tools like Java,Git,Maven,Docker
+  Checkout and build the project using Maven tool
+  Install Sonarqube on Amazon Instance
+  Add Sonar-maven-plugin
+  Start Sonarqube Service
+  Check the code quality
+  Overview of Dockerfile to create a Docker Image
+  Create a Repository in AWS ECR
+CICD Process using Jenkins:
+  Overview of CICD process using Jenkins
+  Install a Jenkins Server (CI Server)
+  Add maven in Jenkins Server from GlobalTool Configuration
+  Create a Jenkins pipeline for checkout and build the project
+  Install Sonarqube Server using Docker Container
+  Generate the token from Sonarqube Server
+  Add Sonar Login credentials on Jenkins server
+  Install SonarQube scanner plugins on Jenkins Server
+  Add Sonarqube on Jenkins Server
+  Pipeline for Sonarqube Scanner for jenkins
+  Pipeline for success or aborted due to qualitygate failure
+Continues Deployment using Ansible playbook:
+  Configure CD Server using UBUNTU Server
+  Ansible setup on Jenkins Server
+  Install packages on CD Server
+Create a playbook to establish a connection from CD Server to AWS ECR
+Playbook to pull the image from ECR to CD Server
+Playbook to run the container using the Docker image
+Access the springboot application running on CD Server
+
+Maven: There are 3 types of repositories:
+  Local - $(HOME)/.m2/repository
+  Remote/Private - Nexus/JFrog
+  Central/Public - Public from maven website
+
+SonarQube:
+Sonarqube is a code quality assurance tool that collects and analyzes sourcecode and provides reports for the code quality of your project.
+Static code analysis for 17 languages
+  Java,c#,JavaScript,Typescript,CloudFormation, Terraform,Kotlin,Ruby,Scala,Go,Flex,Python,PHP.HTML,CSS,XML and VB.Net
+Detucts bugs and vulnerabilities
+Review secutiry Hotspots
+Track code smells and fix your Technical Debt
+Code quality Metrics and History
+CICD/Integration
+
+SonarQube Installation:
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
