@@ -1,0 +1,56 @@
+# Installing Docker on Amazon Linux server
+1. Amazon Linux EC2 Instance
+2. Install docker and start docker services
+   yum install docker -y
+   docker --version   
+# start docker services
+   service docker start
+   service docker status
+3. Create a user called dockeradmin
+   useradd dockeradmin
+   passwd dockeradmin
+4. add a user to docker group to manage docker 
+   usermod -aG docker dockeradmin
+### Validation test
+5. Create a tomcat docker container by pulling a docker image from the public docker registry
+   docker run -d --name test-tomcat-server -p 8090:8080 tomcat:latest
+How to create Docker container?
+To create a docker container we need a docker image with the help of docker image we can run the command called docker run with some additional specifications to create a docker container
+Now how do we get this docker image?
+Docker image we an get it in 2 ways. They are:
+(1)Dockerhub ->It is a public repository which contains the docker images we can use the command called "docker  pull" to take the image on to our local repository.
+(2)Creating our own Dockerfile - pull the basic image from dockerhub on top of that we can do own customization with the help of Dockerfile.
+	- Dockerfile contains instructions what your docker container should do to create a docker image out of dockerfile we are going to use docker build command.
+	https://hub.docker.com/
+	tomcat - pull latest basic image form dockerhub and create a customization container on top of it
+Unable to launch container in browser will see below troubleshooting issue:-
+---------------------------------------------------------------------------
+Because it is looking inside container webapp folder but originally its located on webapps.dist folder (all files)
+Inside container -> Inside webapps.dist folder - "cp -R * ../webapps/"
+
+Here will get the same issue on every new tomcat container. To overcome this issue will do with Dockerfile below,
+Write first dockerfile?
+----------------------
+FROM: To pull the base image
+RUN: To execute shell commands
+CMD: To provides default for an executing container at the time of execution container (OVERWRITTEN)
+ENTRYPOINT: To configure a container that will run as an executable (NOT OVERWRITTEN)
+WORKDIR:To switch the directory inside the cotainer
+COPY: copy a directory from local host to docker container
+ADD: copy files and folders from local machine to docker containers and also using wget command to download any of the packages form browser
+EXPOSE: Informs docker that the container listens on the specified network ports at runtime (insode the container application running some port number those applications are exposing to external network)
+ENV: To set envirnemnt variables
+
+vi Dockerfile:
+FROM centos:latest
+RUN yum install java -y
+RUN mkdir /opt/tomcat
+WORKDIR /opt/tomcat
+#If we will use RUN Instruction will go and add wget but ADD Instruction no need to add any wget directly will add the url
+ADD https://dlcdn.apache.org/tomcat/tomcat-10/v10.1.14/bin/apache-tomcat-10.1.14.tar.gz .
+RUN tar -xvzf apache-tomcat-10.1.14.tar.gz
+RUN mv apache-tomcat-10.1.14 /opt/tomcat
+EXPOSE 8080
+CMD ["/opt/tomcat/bin/catalina.sh", "run"]
+
+docker build -t 
