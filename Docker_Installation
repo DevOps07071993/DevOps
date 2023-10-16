@@ -42,15 +42,25 @@ EXPOSE: Informs docker that the container listens on the specified network ports
 ENV: To set envirnemnt variables
 
 vi Dockerfile:
-FROM centos:latest
+FROM spack/centos7
+RUN yum install java -y
+RUN mkdir /opt/tomcat
+WORKDIR /opt/tomcat
+ADD https://dlcdn.apache.org/tomcat/tomcat-10/v10.1.14/bin/apache-tomcat-10.1.14.tar.gz .
+RUN tar -xvzf apache-tomcat-10.1.14.tar.gz
+RUN mv apache-tomcat-10.1.14/* /opt/tomcat
+EXPOSE 8080
+CMD ["/opt/tomcat/bin/catalina.sh", "run"]
+
+FROM spack/centos7
 RUN yum install java -y
 RUN mkdir /opt/tomcat
 WORKDIR /opt/tomcat
 #If we will use RUN Instruction will go and add wget but ADD Instruction no need to add any wget directly will add the url
 ADD https://dlcdn.apache.org/tomcat/tomcat-10/v10.1.14/bin/apache-tomcat-10.1.14.tar.gz .
 RUN tar -xvzf apache-tomcat-10.1.14.tar.gz
-RUN mv apache-tomcat-10.1.14 /opt/tomcat
+RUN mv apache-tomcat-10.1.14/* /opt/tomcat
 EXPOSE 8080
 CMD ["/opt/tomcat/bin/catalina.sh", "run"]
 
-docker build -t 
+docker build -t tomcat .
