@@ -1,0 +1,93 @@
+Currently application team is using Jenkins for build and deployment like complete administartion access. But here we should go to ansible for deployment.
+Ansible as a deployment tool.
+Dockerhub
+Note: Non-Containerized applications means which we can deploy directly on to the VM here we can use Nexus or Artifactory
+Jenkins is going to take the code from github and build artifacts and copy those artifacts in to ansible server.Ansibe task is to create the images and deploy the containers.
+Ansible is going to take the artifact and with the help of docker file create docker image we can push image it in to the dockerhub and docker pull that image and deploy it in to container
+ Install AnsibleServer:
+----------------------
+Setup EC2 Instance
+Setup hostname
+Create ansadmin user
+Add user to sudoers file
+Generate ssh keys
+Enable password based login
+Install ansible
+  useradd ansadmin
+  passwd ansadmin
+  visudo - Add (ansadmin        ALL=(ALL)       NOPASSWD: ALL) - I can execute any command with out any password
+  vi /etc/ssh/sshd_config  -  (Need to enable password based authentication "PasswordAuthentication 'yes'")  
+  service sshd reload
+  sudo amazon-linux-extras install ansible2 -y
+  python --version
+  ansible --version
+  vi /etc/ansible/hosts - Add dockerhosts private IP)
+Note: Bydefault amazon linux comes with the python
+Login with ansadmin user:
+  ssh-keygen
+  cd /home/ansadmin/.ssh/ - will see private keys and public keys
+  cd .ssh/
+  ssh-copy-id 172.31.16.83(dockerhost ip) - Adding ansible ssh keys to docker
+    O/P: Number of key(s) added: 1
+  ansible all -m ping
+    O/P: 172.31.16.83 | SUCCESS => {
+          "ansible_facts": {
+          "discovered_interpreter_python": "/usr/bin/python"
+          },
+          "changed": false,
+          "ping": "pong"
+        }
+
+We need to prepare ansible system to create docker images:
+---------------------------------------------------------
+Integrate Docker with Ansible:
+-----------------------------
+Add dockerhost to ansible as a managed node so that ansible control node can able to manage our dockerhost
+Playbook to tell to dockerhost how to create container
+
+Dockerhost steps:
+----------------
+Create ansadmin
+Add ansadmin to sudoers file
+Enable password based login
+Ansible Node:
+------------
+Add to hosts file
+Copy ssh keys (path is cd /.ssh)
+Test the connection
+
+Integrate ansible with Jenkins:
+------------------------------
+Jenkins can able to copy artifacts to ansible and ansible to create image and deploy containers to docker host.
+Go to ManageJenkins - configuresystem - Add ansibleserver host details
+
+Create TestJob - Send build artifacts over SSH - Choose AnsibleServer  - Create /opt/docker under ansible system using ansadminuser - Trigger the build (It should copy war file in to ansible /opt/docker path)
+Now ansible job is going to create the image using webapp.war file and push it in to dockerhub repository.
+Install docker on ansible system (under ansadmin user)
+  sudo yum install docker -y
+  cat /etc/group (Here you are able to see docker group)
+Now you should ansadmin to the dockergroup then only we an execute docker commands as ansadmin otherwise it will throw errors.
+  sudo usermod -aG docker ansadmin
+  id ansadmin
+  service docker status
+  sudo service docker start
+  sudo service docker status
+    vi Dockerfile
+        # Pull base image
+        From tomcat:8-jre8
+        RUN cp -R /usr/local/tomcat/webapps.dist/* /usr/local/tomcat/webapps
+        COPY ./*.war /usr/local/tomcat/webapps
+   sudo docker build -t regapp .
+   docker images
+   sudo docker ps -a
+   sudo docker images
+   docker run -d --name regapp-container -p 8083:8080 regapp
+   sudo docker run -d --name regapp-container -p 8083:8080 regapp
+   docker ps -a
+   sudo docker ps -a
+Here everything its happened manually.Now will do automate using ansible playbooks.
+Here Jenkins send artifacts to ansible server but need to deploy on docker container how?
+  First will push image to dockerhub and here ansible will tell to dockercontainer is please go and pull image from dockerhub and deploy using ansible playbook.
+Create ansible playbook to create docker image:
+  
+  
