@@ -63,4 +63,67 @@ RUN mv apache-tomcat-10.1.14/* /opt/tomcat
 EXPOSE 8080
 CMD ["/opt/tomcat/bin/catalina.sh", "run"]
 
+#Catalina home directory
+FROM tomcat:latest
+RUN cp -R /usr/local/tomcat/webapps.dist/* /usr/local/tomcat/webapps
+
 docker build -t tomcat .
+docker run -d --name tomcat-container -port 8081:8080 tomcat
+
+Integrate Docker with Jenkins:
+-----------------------------
+Create dockeradmin user
+Install "publish over ssh plugin"
+Add Docker server to Jenkins "configure systems"
+
+Note:Bydefault ec2 instances  doesn't allows password based authentications we should explicitly enable it.
+vi /etc/ssh/sshd_config - Search password authentication 'yes'
+service sshd reload
+
+TestProject:
+-----------
+1. Launch an EC2 instance for Docker Server
+2. Install docker on EC2 instance and start services
+  yum install docker
+  service docker start
+3. create a new user for Docker management and add him to Docker (default) group
+useradd dockeradmin
+passwd dockeradmin
+usermod -aG docker dockeradmin
+4. Write a Docker file under /opt/docker
+mkdir /opt/docker
+### vi Dockerfile ###
+# Pull base image 
+From tomcat:8-jre8 
+# copy war file on to container 
+COPY ./webapp.war /usr/local/tomcat/webapps
+5. Login to Jenkins console and add Docker server to execute commands from Jenkins  
+Manage Jenkins --> Configure system -->  Publish over SSH --> add Docker server and credentials
+6. Create Jenkins job 
+A) Source Code Management  
+ Repository : https://github.com/DevOps07071993/hello-world.git  
+ Branches to build : */main
+
+B) Build
+ Root POM: pom.xml  
+ Goals and options : clean install package  
+ 
+C) send files or execute commands over SSH
+ Name: DockerServer 
+ Source files	: webapp/target/*.war
+ Remove prefix	: webapp/target
+ Remote directory	: `//opt//docker`  
+ Exec command[s]	: 
+  docker stop tomcat-container;
+  docker rm -f tomcat-container;
+  docker rmi -f tomcat;
+  cd /opt/docker;
+  docker build -t tomcat .
+D) send files or execute commands over SSH  
+  Name: DockerServer
+  Exec command	: docker run -d --name tomcat-container -p 8090:8080 tomcat  
+7. Login to Docker host and check images and containers. (no images and containers)
+8. Execute Jenkins job
+9. check images and containers again on Docker host. This time an image and container get creates through Jenkins job
+10. Access web application from browser which is running on container
+<docker_host_Public_IP>:8082/webapp
